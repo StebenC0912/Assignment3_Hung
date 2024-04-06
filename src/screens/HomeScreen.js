@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import TransactionItem from "../components/TransactionItem";
 import Ionicons from "react-native-vector-icons/Ionicons";
-export default function HomeScreen() {
+export default function HomeScreen(props) {
   const context = useContext(TransactionContext);
   const categories = context.categories;
   const Transactions = context.transactions.sort(
@@ -133,9 +133,17 @@ export default function HomeScreen() {
       ids,
     }));
   }, [displayTransactions]);
-
+  const handleTransactionPress = (id) => {
+    console.log(id);
+    props.navigation.navigate("DetailScreen", { id });
+  };
   return (
-    <ScrollView>
+    <ScrollView
+      style={StyleSheet.create({
+        flex: 1,
+        backgroundColor: "white",
+      })}
+    >
       <View>
         <LinearGradient
           colors={["#125CA3", "#0D3A66"]}
@@ -248,7 +256,13 @@ export default function HomeScreen() {
         data={transactionList}
         keyExtractor={(item) => item.date}
         renderItem={({ item }) => (
-            <TransactionItem date={item.date} transactions={item.ids.map(id => displayTransactions.find(transaction => transaction.id === id))} />
+          <TransactionItem
+            onPress={handleTransactionPress}
+            date={item.date}
+            transactions={item.ids.map((id) =>
+              displayTransactions.find((transaction) => transaction.id === id)
+            )}
+          />
         )}
       />
     </ScrollView>

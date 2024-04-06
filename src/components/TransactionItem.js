@@ -1,8 +1,9 @@
 import React from "react";
 import { View, Text, TouchableOpacity, FlatList } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { getFormattedDate } from "../data/models/date";
 
-const TransactionItem = ({ date, transactions }) => {
+const TransactionItem = ({onPress, date, transactions }) => {
   return (
     <View style={{ alignContent: "center", justifyContent: "center" }}>
       <Text
@@ -13,7 +14,7 @@ const TransactionItem = ({ date, transactions }) => {
           fontSize: 20,
         }}
       >
-        {date}
+        {getFormattedDate(new Date(date))}
       </Text>
       <FlatList
         data={transactions}
@@ -33,9 +34,7 @@ const TransactionItem = ({ date, transactions }) => {
               marginHorizontal: 10,
               marginVertical: 8,
             }}
-            onPress={() => {
-              // Handle onPress if needed
-            }}
+            onPress={() => onPress(item.id)}
           >
             <Ionicons
               name={item.category.icon}
@@ -50,11 +49,17 @@ const TransactionItem = ({ date, transactions }) => {
                 color: item.type === "income" ? "green" : "red",
               }}
             >
-              ${item.amount.toLocaleString("en-US", {
+              $
+              {item.amount.toLocaleString("en-US", {
                 maximumFractionDigits: 0,
               })}
             </Text>
-            <Ionicons name="chevron-forward" color={"#5B75FC"} size={18} />
+            <Ionicons
+              name="chevron-forward"
+              color={"#5B75FC"}
+              size={18}
+              style={{ marginHorizontal: 10 }}
+            />
           </TouchableOpacity>
         )}
         keyExtractor={(item) => item.id.toString()}
